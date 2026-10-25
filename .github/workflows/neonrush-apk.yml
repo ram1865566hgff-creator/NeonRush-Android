@@ -22,15 +22,30 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Restore Godot Android export tools for Actions user
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "HOME=$HOME"
+          mkdir -p "$HOME/.local/share/godot/export_templates" "$HOME/.config/godot"
+          cp -a /root/.local/share/godot/export_templates/4.7.2.stable "$HOME/.local/share/godot/export_templates/"
+          cp -a /root/.config/godot/. "$HOME/.config/godot/"
+          test -s "$HOME/.local/share/godot/export_templates/4.7.2.stable/android_debug.apk"
+          test -d /usr/lib/jvm/java-17-openjdk-amd64
+          test -d /usr/lib/android-sdk
+          echo "Godot export templates, editor settings, Java and Android SDK found."
+          grep -E 'java_sdk_path|android_sdk_path' "$HOME/.config/godot/editor_settings-4.7.tres" || true
+
       - name: Unpack game project
         shell: bash
         run: |
+          set -euo pipefail
           if [ -s game.zip ]; then
             ARCHIVE=game.zip
           elif [ -s NeonRush_Godot_Android_GitHub.zip ]; then
             ARCHIVE=NeonRush_Godot_Android_GitHub.zip
           else
-            echo "Upload game.zip at the root of this repository"
+            echo "Upload game.zip to repository root"
             exit 1
           fi
           mkdir -p game
@@ -44,10 +59,13 @@ jobs:
 
       - name: Export Android debug APK
         working-directory: game
+        shell: bash
         run: |
+          set -euo pipefail
           mkdir -p build
           godot --headless --export-debug "Android" build/NeonRush-debug.apk
           test -s build/NeonRush-debug.apk
+          echo "APK built successfully!"
 
       - name: Upload installable APK
         uses: actions/upload-artifact@v4
