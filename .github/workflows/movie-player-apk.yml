@@ -29,6 +29,7 @@ jobs:
           unzip -q /tmp/commandlinetools.zip -d /tmp/android-cmd
           mv /tmp/android-cmd/cmdline-tools "$HOME/android-sdk/cmdline-tools/latest"
           echo "ANDROID_HOME=$HOME/android-sdk" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> "$GITHUB_ENV"
           echo "$HOME/android-sdk/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
           yes | "$HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$HOME/android-sdk" --licenses >/dev/null || true
           "$HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$HOME/android-sdk" 'platforms;android-35' 'build-tools;35.0.0' 'platform-tools'
@@ -38,7 +39,7 @@ jobs:
           gradle-version: '8.11.1'
       - name: Compile APK
         working-directory: MoviePlayer
-        run: gradle --no-daemon :app:assembleDebug
+        run: gradle --no-daemon :app:assembleDebug --stacktrace
       - name: Rename APK
         run: cp MoviePlayer/app/build/outputs/apk/debug/app-debug.apk NeonFilm-1.0.apk
       - name: Publish Android APK
