@@ -85,6 +85,18 @@ jobs:
         working-directory: game
         run: godot --headless --editor --quit
 
+      - name: Validate main scene and GDScript before export
+        working-directory: game
+        shell: bash
+        run: |
+          set -euo pipefail
+          godot --headless --path . --quit-after 60 > /tmp/neonrush-smoke.log 2>&1 || { cat /tmp/neonrush-smoke.log; exit 1; }
+          cat /tmp/neonrush-smoke.log
+          if grep -E 'SCRIPT ERROR|Parse Error|Failed to load script|Invalid call|Invalid get index|Parser Error|ERROR: Failed to load' /tmp/neonrush-smoke.log; then
+            echo "Godot startup test failed. Refusing to publish a blank-screen APK."
+            exit 1
+          fi
+
       - name: Export Android debug APK
         working-directory: game
         shell: bash
@@ -105,8 +117,8 @@ jobs:
       - name: Publish APK as a direct-download GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v0.4.0
-          name: NeonRush Turbo — тестовая версия 0.4.0
+          tag_name: v0.4.1
+          name: NeonRush Turbo — исправление запуска 0.4.1
           prerelease: true
           draft: false
           make_latest: false
