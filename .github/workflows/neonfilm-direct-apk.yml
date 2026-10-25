@@ -1,0 +1,27 @@
+name: Publish direct NeonFilm APK
+on:
+  push:
+    branches: [movie-player]
+    paths: ['.github/workflows/neonfilm-direct-apk.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download successfully built APK (not source ZIP)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p release
+          gh run download 40224222897 --repo "$GITHUB_REPOSITORY" --name NeonFilm-APK --dir release
+          ls -lh release/
+          test -f release/NeonFilm-1.0.apk
+          file release/NeonFilm-1.0.apk
+      - name: Publish direct .apk download in Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create neonfilm-v1.0.0 release/NeonFilm-1.0.apk --repo "$GITHUB_REPOSITORY" --title "NeonFilm 1.0 — Android APK" --notes "Готовый установочный APK для Android. Без ZIP: скачайте файл NeonFilm-1.0.apk. Отладочная сборка." --target "$GITHUB_SHA"
