@@ -74,6 +74,13 @@ jobs:
           grep -q 'orientation=4' game/project.godot
           test -s game/assets/deluxe/run_7.svg
 
+      - name: Apply responsive controls and world variety
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/improve_v4.py
+          test -s game/scripts/game.gd
+
       - name: Import graphics and scripts
         working-directory: game
         run: godot --headless --editor --quit
@@ -98,8 +105,8 @@ jobs:
       - name: Publish APK as a direct-download GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v0.3.0-turbo
-          name: NeonRush Turbo — тестовая версия 0.3.0
+          tag_name: v0.4.0
+          name: NeonRush Turbo — тестовая версия 0.4.0
           prerelease: true
           draft: false
           make_latest: false
