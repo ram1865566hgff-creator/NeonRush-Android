@@ -5,6 +5,7 @@ on:
   push:
     branches: [main]
     paths:
+      - 'game.zip'
       - 'NeonRush_Godot_Android_GitHub.zip'
       - '.github/workflows/neonrush-apk.yml'
 
@@ -24,13 +25,20 @@ jobs:
       - name: Unpack game project
         shell: bash
         run: |
-          test -s NeonRush_Godot_Android_GitHub.zip || { echo 'Upload NeonRush_Godot_Android_GitHub.zip to the repository root first'; exit 1; }
+          if [ -s game.zip ]; then
+            ARCHIVE=game.zip
+          elif [ -s NeonRush_Godot_Android_GitHub.zip ]; then
+            ARCHIVE=NeonRush_Godot_Android_GitHub.zip
+          else
+            echo "Upload game.zip at the root of this repository"
+            exit 1
+          fi
           mkdir -p game
-          unzip -q NeonRush_Godot_Android_GitHub.zip -d game
+          unzip -q "$ARCHIVE" -d game
           test -f game/project.godot
           test -f game/export_presets.cfg
 
-      - name: Import art and scripts
+      - name: Import graphics and scripts
         working-directory: game
         run: godot --headless --editor --quit
 
