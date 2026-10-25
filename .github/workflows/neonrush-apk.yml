@@ -58,6 +58,14 @@ jobs:
           fi
           grep -q '^textures/vram_compression/import_etc2_astc=true' game/project.godot
 
+      - name: Install Python 3 for game upgrade
+        shell: bash
+        run: |
+          set -euo pipefail
+          apt-get update -qq
+          DEBIAN_FRONTEND=noninteractive apt-get install -y -qq python3
+          python3 --version
+
       - name: Upgrade art and gameplay to Turbo edition
         shell: bash
         run: |
