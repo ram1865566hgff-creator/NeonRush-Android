@@ -58,6 +58,14 @@ jobs:
           fi
           grep -q '^textures/vram_compression/import_etc2_astc=true' game/project.godot
 
+      - name: Upgrade art and gameplay to Turbo edition
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/upgrade.py
+          grep -q 'orientation=4' game/project.godot
+          test -s game/assets/deluxe/run_7.svg
+
       - name: Import graphics and scripts
         working-directory: game
         run: godot --headless --editor --quit
@@ -82,8 +90,8 @@ jobs:
       - name: Publish APK as a direct-download GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v0.1.0
-          name: NeonRush Android — тестовая версия 0.1.0
+          tag_name: v0.3.0-turbo
+          name: NeonRush Turbo — тестовая версия 0.3.0
           prerelease: true
           draft: false
           make_latest: false
