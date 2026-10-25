@@ -17,6 +17,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Unpack movie player project
         run: unzip -q -o MoviePlayer.zip -d .
+      - name: Apply new NeonFilm icon
+        run: cp NeonFilmAssets/ic_launcher.xml MoviePlayer/app/src/main/res/drawable/ic_launcher.xml
       - name: Java 17
         uses: actions/setup-java@v4
         with:
