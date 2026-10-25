@@ -10,7 +10,7 @@ on:
       - '.github/workflows/neonrush-apk.yml'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -78,3 +78,18 @@ jobs:
           name: NeonRush-Android-APK
           path: game/build/NeonRush-debug.apk
           if-no-files-found: error
+
+      - name: Publish APK as a direct-download GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v0.1.0
+          name: NeonRush Android — тестовая версия 0.1.0
+          prerelease: true
+          draft: false
+          make_latest: false
+          files: game/build/NeonRush-debug.apk
+          fail_on_unmatched_files: true
+          body: |
+            Тестовая сборка 2D-платформера NeonRush для Android.
+            Для установки скачайте NeonRush-debug.apk из раздела Assets на этой странице.
+            Это отладочный APK; работа игры на реальных Android-устройствах ещё не проверена.
