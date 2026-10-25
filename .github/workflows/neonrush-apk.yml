@@ -1,0 +1,49 @@
+name: NeonRush Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'NeonRush_Godot_Android_GitHub.zip'
+      - '.github/workflows/neonrush-apk.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build Android debug APK
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Unpack game project
+        shell: bash
+        run: |
+          test -s NeonRush_Godot_Android_GitHub.zip || { echo 'Upload NeonRush_Godot_Android_GitHub.zip to the repository root first'; exit 1; }
+          mkdir -p game
+          unzip -q NeonRush_Godot_Android_GitHub.zip -d game
+          test -f game/project.godot
+          test -f game/export_presets.cfg
+
+      - name: Import art and scripts
+        working-directory: game
+        run: godot --headless --editor --quit
+
+      - name: Export Android debug APK
+        working-directory: game
+        run: |
+          mkdir -p build
+          godot --headless --export-debug "Android" build/NeonRush-debug.apk
+          test -s build/NeonRush-debug.apk
+
+      - name: Upload installable APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: NeonRush-Android-APK
+          path: game/build/NeonRush-debug.apk
+          if-no-files-found: error
