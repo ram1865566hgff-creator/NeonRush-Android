@@ -52,6 +52,11 @@ jobs:
           unzip -q "$ARCHIVE" -d game
           test -f game/project.godot
           test -f game/export_presets.cfg
+          # Godot requires ETC2/ASTC import for Android, even with GL Compatibility.
+          if ! grep -q '^textures/vram_compression/import_etc2_astc=true' game/project.godot; then
+            sed -i '/^\[rendering\]/a textures/vram_compression/import_etc2_astc=true' game/project.godot
+          fi
+          grep -q '^textures/vram_compression/import_etc2_astc=true' game/project.godot
 
       - name: Import graphics and scripts
         working-directory: game
