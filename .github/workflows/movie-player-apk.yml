@@ -32,7 +32,7 @@ jobs:
       - name: Install Android command line SDK
         run: |
           mkdir -p "$HOME/android-sdk/cmdline-tools"
-          curl -fsSL https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -o /tmp/commandlinetools.zip
+          curl --http1.1 --retry 7 --retry-all-errors --retry-delay 4 -fLsS https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -o /tmp/commandlinetools.zip
           unzip -q /tmp/commandlinetools.zip -d /tmp/android-cmd
           mv /tmp/android-cmd/cmdline-tools "$HOME/android-sdk/cmdline-tools/latest"
           echo "ANDROID_HOME=$HOME/android-sdk" >> "$GITHUB_ENV"
