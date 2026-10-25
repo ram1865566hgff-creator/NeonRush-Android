@@ -23,7 +23,7 @@ var section_length := 6200.0""","new state")
 replace("    scenery.clear()\n    p = Vector2",
         "    scenery.clear()\n    projectiles.clear()\n    touch_origins.clear()\n    swipe_used.clear()\n    p = Vector2","reset")
 replace('var enemy_type := "drone" if enemy_i % 4 == 1 else "crab"',
-        'var enemy_type := ["crab", "drone", "hopper", "hunter", "turret"][enemy_i % 5]','enemy variety')
+        'var enemy_type: String = ["crab", "drone", "hopper", "hunter", "turret"][enemy_i % 5]','enemy variety')
 replace('enemies.append({"p": Vector2(enemy_x, 410.0 if enemy_type == "drone" else 535.0),',
         'enemies.append({"p": Vector2(enemy_x, 410.0 if enemy_type == "drone" else 535.0),','enemy spawn preserved')
 replace('enemy_x += rng.randf_range(780.0, 1160.0 - level * 28.0)',
