@@ -24,7 +24,7 @@ replace("    private MediaPlayer player;\n", """    private MediaPlayer player;
     private int lastDoubleTapDirection;
     private int accumulatedSeekSeconds;
     private final Runnable autoHide = () -> {
-        if (currentUri != null && player != null && player.isPlaying()) setControlsVisible(false);
+        setControlsVisible(false);
     };
 """)
 
