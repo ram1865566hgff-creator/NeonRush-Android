@@ -26,6 +26,8 @@ jobs:
         run: python3 NeonFilmPatch/apply_v13.py
       - name: Fix black MP4 video with Media3 TextureView
         run: python3 NeonFilmPatch/apply_v14.py
+      - name: Apply compact overlay controls
+        run: python3 NeonFilmPatch/apply_v15.py
       - name: Apply new NeonFilm icon
         run: cp NeonFilmAssets/ic_launcher.xml MoviePlayer/app/src/main/res/drawable/ic_launcher.xml
       - name: Use Android API 36 required by VLC
@@ -54,12 +56,12 @@ jobs:
         working-directory: MoviePlayer
         run: gradle --no-daemon :app:assembleDebug --stacktrace
       - name: Rename APK
-        run: cp MoviePlayer/app/build/outputs/apk/debug/app-debug.apk NeonFilm-1.4.apk
+        run: cp MoviePlayer/app/build/outputs/apk/debug/app-debug.apk NeonFilm-1.5.apk
       - name: Publish Android APK
         uses: actions/upload-artifact@v4
         with:
-          name: NeonFilm-v1.4-APK
-          path: NeonFilm-1.4.apk
+          name: NeonFilm-v1.5-APK
+          path: NeonFilm-1.5.apk
           retention-days: 30
           if-no-files-found: error
 
@@ -67,5 +69,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release view neonfilm-v1.4.0 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || gh release create neonfilm-v1.4.0 --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "NeonFilm 1.4 Android" --notes "Двойной тап слева и справа: накопительная перемотка по 10 секунд (10, 20, 30). Меню управления по нажатию. Исправлен доступ к видео с телефона."
-          gh release upload neonfilm-v1.4.0 NeonFilm-1.4.apk --repo "$GITHUB_REPOSITORY" --clobber
+          gh release view neonfilm-v1.5.0 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || gh release create neonfilm-v1.5.0 --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "NeonFilm 1.5 Android" --notes "Двойной тап слева и справа: накопительная перемотка по 10 секунд (10, 20, 30). Меню управления по нажатию. Исправлен доступ к видео с телефона."
+          gh release upload neonfilm-v1.5.0 NeonFilm-1.5.apk --repo "$GITHUB_REPOSITORY" --clobber
